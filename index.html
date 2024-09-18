@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rush Hour Spiel</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: auto;
+            background-color: #f0f0f0;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <div class="controls">
+        <span>zufällig mit</span>
+        <select name="cars" id="cars-select">
+            <option value="2">2</option>
+            <option value="2">3</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8" selected>8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+          <span>Autos</span>
+          <button onclick="randomCars()">generieren</button>
+    </div>
+    
+    <script src="./rushhour.js"></script>
+</body>
+</html>
+
