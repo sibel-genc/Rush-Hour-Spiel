@@ -10,6 +10,9 @@ let selectedCarIndex = null; // Speichert, welches Auto aktuell ausgewählt ist
 var img = new Image();
 img.src = "/bilder/cars.jpg";
 
+// var img = new Image();
+// img.src = "/bilder/truck.jpg";
+
 const carPicture = [
   [100, 100, 500, 900],
   [550, 100, 500, 900],
@@ -25,7 +28,7 @@ const carPicture = [
   [1000, 950, 500, 900],
   [1450, 950, 500, 900],
   [550, 100, 500, 900],
-  [1000, 100, 500, 900]
+  [1000, 100, 500, 900],
 ];
 
 // Autoklasse zur Darstellung und Bewegung der Autos
@@ -230,9 +233,24 @@ function randomCars() {
 
   do {
     generateRandomCars(number);
-  } while (cars[0].x != 0); // das rote Auto soll immer ganz links stehen
+  } while (cars[0].x != 0 || isTooEasy(cars)); // das rote Auto soll immer ganz links stehen
 
   setTimeout(() => draw(), 100);
+}
+
+function isTooEasy(cars) {
+  // über cars iterieren
+  // für jedes car außer dem roten Auto (car[0]) überprüfen,
+  // ob es in der 3ten Zeile liegt
+  // wenn kein Auto in der 3ten Zeile liegt, dann ist es zu einfach
+  // überprüfen ob car.y + car.height "über" der 3ten Zeile liegt
+  for (let index = 1; index < cars.length; index++) {
+    const car = cars[index];
+    if (car.y < 2 * GRID_SIZE && car.y + car.height > 2 * GRID_SIZE) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function generateRandomCars(number) {
@@ -245,7 +263,7 @@ function generateRandomCars(number) {
       } else {
         length = 2;
       }
-      let direction = Math.random() > 0.7 ? "horizontal" : "vertical";
+      let direction = Math.random() > 0.6 ? "horizontal" : "vertical";
       let y;
 
       if (direction === "horizontal") {
