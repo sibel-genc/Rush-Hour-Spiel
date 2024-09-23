@@ -1,54 +1,55 @@
-
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Rush Hour Spiel</title>
     <style>
-        canvas {
-            border: 1px solid black;
-            display: block;
-            margin: auto;
-            background-color: white;
-        }
-        .controls {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .flex {
-            display: flex;
-            justify-content: center;
-        }
-        #flag {
-            margin-top: 200px;
-        }
+      canvas {
+        border: 1px solid black;
+        background-color: white;
+      }
+      .controls {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .flex {
+        display: flex;
+        justify-content: center;
+      }
+      #flag {
+        margin-top: 200px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="flex">
-        <div>
-            <canvas id="gameCanvas" width="600" height="600"></canvas>
-        </div>
-        <div>
-            <img id="flag" src="bilder/checkered-flag.png" alt="" height="100" width="100">
-        </div>
+      <canvas id="gameCanvas" width="600" height="600"></canvas>
+      <div>
+        <img
+          id="flag"
+          src="bilder/checkered-flag.png"
+          alt=""
+          height="100"
+          width="100"
+        />
+      </div>
     </div>
     <div class="controls">
-        <span>zufällig mit</span>
-        <select name="cars" id="cars-select">
-            <option value="2">2</option>
-            <option value="2">3</option>
-            <option value="4">4</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8" selected>8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-          <span>Autos</span>
-          <button onclick="randomCars()">generieren</button>
+      <span>zufällig mit</span>
+      <select name="cars" id="cars-select">
+        <option value="2">2</option>
+        <option value="2">3</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8" selected>8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+      </select>
+      <span>Autos</span>
+      <button onclick="randomCars()">generieren</button>
     </div>
-    
-    <script src="./rushhour.js"></script>
-</body>
-</html>
 
+    <script src="./rushhour.js"></script>
+  </body>
+</html>

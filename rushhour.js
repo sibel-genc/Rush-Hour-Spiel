@@ -10,9 +10,8 @@ let selectedCarIndex = null; // Speichert, welches Auto aktuell ausgewählt ist
 var img = new Image();
 img.src = "/bilder/cars.jpg";
 
-// var img = new Image();
-// img.src = "/bilder/truck.jpg";
-
+// bereiche des Bildes, die für die Darstellung der Autos verwendet werden sollen
+// 1. x koordinate, y koordinate, breite, höhe
 const carPicture = [
   [100, 100, 500, 900],
   [550, 100, 500, 900],
@@ -22,13 +21,6 @@ const carPicture = [
   [550, 950, 500, 900],
   [1000, 950, 500, 900],
   [1450, 950, 500, 900],
-  [550, 100, 500, 900],
-  [1000, 100, 500, 900],
-  [550, 950, 500, 900],
-  [1000, 950, 500, 900],
-  [1450, 950, 500, 900],
-  [550, 100, 500, 900],
-  [1000, 100, 500, 900],
 ];
 
 // Autoklasse zur Darstellung und Bewegung der Autos
@@ -50,9 +42,6 @@ class Car {
 
   // Methode zum Zeichnen des Autos
   draw() {
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.height);
-
     if (this.direction === "horizontal") {
       // für horizontales Auto muss das Bild gedreht werden
       context.save();
@@ -72,10 +61,15 @@ class Car {
     } else {
       context.drawImage(
         img,
+        // x
         this.picture[0],
+        // y
         this.picture[1],
+        // breite
         this.picture[2],
+        // höhe
         this.picture[3],
+        // zeichne Auto auf dem Spielfeld unter diesen Koordinaten
         this.x,
         this.y,
         this.width,
@@ -150,7 +144,6 @@ class Car {
 
 // Array mit den Autos, die auf das Spielfeld gesetzt werden
 let cars = [];
-randomCars();
 
 // Funktion, um das Spielfeld und die Autos zu zeichnen
 function draw() {
@@ -166,6 +159,7 @@ function draw() {
 
 // Funktion, um ein Auto zu bewegen
 function moveCar(index, step) {
+  // überprüfen, ob man das Auto bewegen darf
   if (index !== null && cars[index].canMove(step, cars)) {
     cars[index].move(step);
   }
@@ -229,24 +223,27 @@ canvas.addEventListener("click", (event) => {
 });
 
 function randomCars() {
+  // Anzahl der Autos aus dem select auslesen
   const number = Number.parseInt(document.getElementById("cars-select").value);
 
   do {
     generateRandomCars(number);
-  } while (cars[0].x != 0 || isTooEasy(cars)); // das rote Auto soll immer ganz links stehen
+  } while (
+    // wenn das rote Auto nicht links steht, dann generiere nochmal eine zufällige Anordnung der Autos
+    cars[0].x != 0 ||
+    // generiere die Autos auch neu, wenn es zu einfach ist
+    isTooEasy(cars)
+  );
 
+  // kurz warten, bis das Bild geladen ist
   setTimeout(() => draw(), 100);
 }
 
 function isTooEasy(cars) {
-  // über cars iterieren
-  // für jedes car außer dem roten Auto (car[0]) überprüfen,
-  // ob es in der 3ten Zeile liegt
-  // wenn kein Auto in der 3ten Zeile liegt, dann ist es zu einfach
-  // überprüfen ob car.y + car.height "über" der 3ten Zeile liegt
+  // mindestens ein Auto soll vertikal vor dem roten Auto stehen
   for (let index = 1; index < cars.length; index++) {
     const car = cars[index];
-    if (car.y < 2 * GRID_SIZE && car.y + car.height > 2 * GRID_SIZE) {
+    if (car.y <= 2 * GRID_SIZE && car.y + car.height >= 3 * GRID_SIZE) {
       return false;
     }
   }
@@ -276,37 +273,49 @@ function generateRandomCars(number) {
         x = Math.floor(Math.random() * 6);
       }
 
-      cars.push(new Car(x, y, length, carPicture[index + 1], direction));
+      cars.push(new Car(x, y, length, carPicture[(index % 7) + 1], direction));
     }
+    // wenn die zufällig generierten Autos nicht valide sind, wiederhole
   } while (!isValid(cars));
 
   for (let index = 0; index < 10000; index++) {
+    // zufälliges Auto auswählen
     const moveCar = Math.floor(Math.random() * number);
+
+    if(moveCar == 0 && cars[moveCar].x === 0){
+      continue;
+    }
+
+    // Auto zufällig vor oder zurück bewegen
     const step = Math.random() > 0.5 ? MOVE_STEP : -MOVE_STEP;
 
+    // kann das Auto bewegt werden?
     if (cars[moveCar].canMove(step, cars)) {
+      // Auto bewegen
       cars[moveCar].move(step);
     }
   }
 }
 
-// überprüft ob die cars Liste valide ist, d.h. ob sich 2 Autos "überschneiden"
+// überprüft ob die cars Liste valide ist, d.h. ob sich 2 Autos "überschneiden", bzw. ob die Autos kollidieren
 function isValid(cars) {
-  for (const [i, car1] of cars.entries()) {
-    for (const [j, car2] of cars.entries()) {
-      if (j > i) {
-        if (
-          !(
-            car1.x + car1.width <= car2.x ||
-            car1.x >= car2.x + car2.width ||
-            car1.y + car1.height <= car2.y ||
-            car1.y >= car2.y + car2.height
-          )
-        ) {
-          return false;
-        }
+  for (let i = 0; i < cars.length - 1; i++) {
+    const car1 = cars[i];
+    for (let j = i + 1; j < cars.length; j++) {
+      const car2 = cars[j];
+      if (
+        // überschneiden sich car1 und car2?
+        car1.x + car1.width > car2.x &&
+        car1.x < car2.x + car2.width &&
+        car1.y + car1.height > car2.y &&
+        car1.y < car2.y + car2.height
+      ) {
+        return false;
       }
     }
   }
   return true;
 }
+
+// spiel starten
+randomCars();
