@@ -8,33 +8,29 @@ const MOVE_STEP = GRID_SIZE; // Schrittgröße, mit der Autos bewegt werden
 let selectedCarIndex = null; // Speichert, welches Auto aktuell ausgewählt ist
 
 var img = new Image();
-img.src = "/bilder/car.svg";
+img.src = "/bilder/cars.jpg";
 
-const randomColors = [
-  "#FF5733", // Rot-Orange
-  "#33FF57", // Grün
-  "#3357FF", // Blau
-  "#FF33A1", // Pink
-  "#FFFF33", // Gelb
-  "#33FFF3", // Türkis
-  "#FF8C33", // Dunkel-Orange
-  "#33FFA5", // Mintgrün
-  "#8C33FF", // Lila
-  "#FFB533", // Gold
-  "#33D4FF", // Hellblau
-  "#7FFF33", // Hellgrün
-  "#FF33F6", // Magenta
-  "#33FFCC", // Türkis-Blau
-  "#FF6633", // Lachsrot
-  "#FF33FF", // Neon-Pink
-  "#33FF66", // Neongrün
-  "#3366FF", // Königsblau
-  "#FF3385", // Rosa
+const carPicture = [
+  [100, 100, 500, 900],
+  [550, 100, 500, 900],
+  [1000, 100, 500, 900],
+  [1450, 100, 500, 900],
+  [100, 950, 500, 900],
+  [550, 950, 500, 900],
+  [1000, 950, 500, 900],
+  [1450, 950, 500, 900],
+  [550, 100, 500, 900],
+  [1000, 100, 500, 900],
+  [550, 950, 500, 900],
+  [1000, 950, 500, 900],
+  [1450, 950, 500, 900],
+  [550, 100, 500, 900],
+  [1000, 100, 500, 900]
 ];
 
 // Autoklasse zur Darstellung und Bewegung der Autos
 class Car {
-  constructor(x, y, length, color, direction) {
+  constructor(x, y, length, picture, direction) {
     this.x = x * GRID_SIZE; // Startposition des Autos auf der x-Achse
     this.y = y * GRID_SIZE; // Startposition des Autos auf der y-Achse
     if (direction === "horizontal") {
@@ -44,7 +40,7 @@ class Car {
       this.width = GRID_SIZE; // Breite des Autos
       this.height = GRID_SIZE * length; // Höhe des Autos
     }
-    this.color = color; // Farbe des Autos
+    this.picture = picture; // Farbe des Autos
     this.direction = direction; // Bewegungsrichtung (horizontal oder vertikal)
     this.isSelected = false; // Status, ob das Auto ausgewählt ist
   }
@@ -60,19 +56,27 @@ class Car {
       context.rotate(Math.PI / 2);
       context.drawImage(
         img,
-        this.y - 50,
-        -this.x - 200 - (this.width - 200) / 2,
-        200,
-        200
+        this.picture[0],
+        this.picture[1],
+        this.picture[2],
+        this.picture[3],
+        this.y,
+        -this.x,
+        this.height,
+        -this.width
       );
       context.restore();
     } else {
       context.drawImage(
         img,
-        this.x - 50,
-        this.y + (this.height - 200) / 2,
-        200,
-        200
+        this.picture[0],
+        this.picture[1],
+        this.picture[2],
+        this.picture[3],
+        this.x,
+        this.y,
+        this.width,
+        this.height
       );
     }
 
@@ -145,25 +149,10 @@ class Car {
 let cars = [];
 randomCars();
 
-// Funktion, um das Gitternetz zu zeichnen
-function drawGrid() {
-  context.strokeStyle = "#ccc";
-  for (let i = 0; i <= CANVAS_SIZE; i += GRID_SIZE) {
-    context.beginPath();
-    context.moveTo(i, 0);
-    context.lineTo(i, CANVAS_SIZE);
-    context.stroke();
-    context.beginPath();
-    context.moveTo(0, i);
-    context.lineTo(CANVAS_SIZE, i);
-    context.stroke();
-  }
-}
-
 // Funktion, um das Spielfeld und die Autos zu zeichnen
 function draw() {
   context.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  drawGrid();
+
   for (let car of cars) {
     car.draw();
   }
@@ -248,7 +237,7 @@ function randomCars() {
 
 function generateRandomCars(number) {
   do {
-    cars = [new Car(4, 2, 2, "red", "horizontal")];
+    cars = [new Car(4, 2, 2, carPicture[0], "horizontal")];
     for (let index = 0; index < number; index++) {
       let length;
       if (Math.random() > 0.5) {
@@ -269,7 +258,7 @@ function generateRandomCars(number) {
         x = Math.floor(Math.random() * 6);
       }
 
-      cars.push(new Car(x, y, length, randomColors[index], direction));
+      cars.push(new Car(x, y, length, carPicture[index + 1], direction));
     }
   } while (!isValid(cars));
 

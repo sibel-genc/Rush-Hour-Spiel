@@ -8,16 +8,30 @@
             border: 1px solid black;
             display: block;
             margin: auto;
-            background-color: #f0f0f0;
+            background-color: white;
         }
         .controls {
             text-align: center;
             margin-top: 20px;
         }
+        .flex {
+            display: flex;
+            justify-content: center;
+        }
+        #flag {
+            margin-top: 200px;
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <div class="flex">
+        <div>
+            <canvas id="gameCanvas" width="600" height="600"></canvas>
+        </div>
+        <div>
+            <img id="flag" src="bilder/checkered-flag.png" alt="" height="100" width="100">
+        </div>
+    </div>
     <div class="controls">
         <span>zufällig mit</span>
         <select name="cars" id="cars-select">
